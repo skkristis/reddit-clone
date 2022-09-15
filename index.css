@@ -134,4 +134,8 @@ main {
   background: #ffffff;
   border-radius: 3px;
   padding: 15px;
+  margin-block: 10px;
+}
+.feed-card > img {
+  width: 100%;
 }
