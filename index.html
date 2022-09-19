@@ -78,30 +78,24 @@
         <div id="feed">
           <h3 class="defining-content">Popular posts</h3>
           <div id="feed-selection">
-            <button class="btn-filter" type="button">Hot</button>
-            <select class="btn-filter" name="geo-location" id="geo-location">
+            <button value="hot" class="btn-clicked btn-filter" type="button">Hot</button>
+            <!-- <select class="btn-filter" name="geo-location" id="geo-location">
               <option value="global">Everywhere</option>
               <option value="US">United States</option>
               <option value="AR">Argentina</option>
               <option value="AU">Australia</option>
-              <option value="AU">Australia</option>
-              <option value="AU">Australia</option>
-              <option value="AU">Australia</option>
-              <option value="AU">Australia</option>
-              <option value="AU">Australia</option>
-              <option value="AU">Australia</option>
+            </select> -->
+            <button value="new" class="btn-filter" type="button">New</button>
+            <button value="top" id="top" class="btn-filter" type="button">Top</button>
+            <select class="btn-filter" name="time-fram" id="top-time-frame">
+              <option value="now">Now</option>
+              <option value="today">Today</option>
+              <option value="thisWeek">This Week</option>
+              <option value="thisMonth">This Month</option>
+              <option value="thisYear">This Year</option>
+              <option value="allTime">All Time</option>
             </select>
-            <button class="btn-filter" type="button">New</button>
-            <button class="btn-filter" type="button">Top</button>
-            <select class="btn-filter" name="time-fram" id="time-frame">
-              <option value="#">Now</option>
-              <option value="#">Today</option>
-              <option value="#">This Week</option>
-              <option value="#">This Month</option>
-              <option value="#">This Year</option>
-              <option value="#">All Time</option>
-            </select>
-            <button class="btn-filter" type="button">Rising</button>
+            <button value="rising" class="btn-filter" type="button">Rising</button>
           </div>
           <div id="feed-card-container"></div>
         </div>
