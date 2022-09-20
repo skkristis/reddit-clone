@@ -137,12 +137,11 @@ main {
   border-radius: 3px;
   padding: 10px;
 }
-.feed-card-main > img {
+.feed-card-main > img,
+.feed-card-main > video {
   max-width: 100%;
 }
-#top-time-frame {
-  display: none;
-}
+
 .btn-clicked {
   color: #0079d3;
   background: #e9eaeb;
@@ -164,6 +163,7 @@ main {
 }
 .sub-auth {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 5px;
   font-size: 12px;
@@ -173,4 +173,16 @@ main {
   background: #ffffff;
   display: flex;
   gap: 10px;
+}
+.awards-icon {
+  width: 16px;
+}
+.blur {
+  filter: blur(1rem);
+}
+.top-display-hidden {
+  display: none;
+}
+.top-display {
+  display: inline-block;
 }

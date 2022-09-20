@@ -22,20 +22,63 @@ function createCard(obj) {
   })();
 
   const mainContent = (() => {
+    function msToTime(ms) {
+      let seconds = (ms / 1000).toFixed(0);
+      let minutes = (ms / (1000 * 60)).toFixed(0);
+      let hours = (ms / (1000 * 60 * 60)).toFixed(0);
+      let days = (ms / (1000 * 60 * 60 * 24)).toFixed(0);
+      let months = (ms / (1000 * 60 * 60 * 24 * 30)).toFixed(0);
+      let years = (ms / (1000 * 60 * 60 * 24 * 30 * 12)).toFixed(0);
+
+      if (seconds < 60) {
+        return "just now";
+      } else if (minutes < 60) {
+        return minutes + " minutes ago";
+      } else if (hours < 24) {
+        return hours + " hours ago";
+      } else if (days < 30) {
+        return days + " days ago";
+      } else if (months < 12) {
+        return months + " months ago";
+      } else {
+        return years + " years ago";
+      }
+    }
     const mainContentContainer = document.createElement("div");
-    const infoHeader = (() => {
+    const infoHeader = (async () => {
       const author = document.createElement("p");
       const subreddit = document.createElement("h4");
       const infoHeaderContainer = document.createElement("div");
+      const awardsCountContainer = document.createElement("p");
+      let awardsCount = 0;
+      let timePosted = msToTime(new Date() - new Date(obj.created * 1000));
 
       infoHeaderContainer.className = "sub-auth";
-      author.textContent = `• ${obj.author}`;
+      author.textContent = `• Posted by u/${obj.author} ${timePosted}`;
       subreddit.textContent = obj.subreddit_name_prefixed;
 
       infoHeaderContainer.appendChild(subreddit);
       infoHeaderContainer.appendChild(author);
 
-      return infoHeaderContainer;
+      obj.all_awardings.forEach((award, i) => {
+        if (i > 3) {
+          awardsCount += award.count;
+        } else {
+          awardsCount += award.count;
+          const icon = document.createElement("img");
+          const count = document.createElement("p");
+          const iconUrl = award.icon_url;
+          icon.src = iconUrl;
+          icon.className = "awards-icon";
+          count.innerText = award.count;
+          infoHeaderContainer.appendChild(icon);
+          infoHeaderContainer.appendChild(count);
+        }
+      });
+      awardsCountContainer.innerText = `& ${awardsCount} More`;
+      infoHeaderContainer.appendChild(awardsCountContainer);
+
+      mainContentContainer.appendChild(infoHeaderContainer);
     })();
     const footerExtras = (() => {
       const footerContainer = document.createElement("div");
@@ -48,7 +91,7 @@ function createCard(obj) {
         { type: " report", icon: "fa-regular fa-flag" },
       ];
       footerContainer.className = "card-footer";
-      content.map((el) => {
+      content.forEach((el) => {
         const containerIcons = document.createElement("div");
         const button = document.createElement("button");
         const icon = document.createElement("i");
@@ -61,7 +104,7 @@ function createCard(obj) {
 
       return footerContainer;
     })();
-    mainContentContainer.appendChild(infoHeader);
+    // mainContentContainer.appendChild(infoHeader);
 
     const title = document.createElement("h3");
     mainContentContainer.className = "feed-card-main";
@@ -71,12 +114,22 @@ function createCard(obj) {
     mainContentContainer.appendChild(title);
 
     if (obj.preview) {
-      const img = document.createElement("img");
-      let url = obj.preview.images[0].source.url;
-      const regExpUrl = /amp;/g;
-      url = url.replaceAll(regExpUrl, "");
-      img.src = url;
-      mainContentContainer.appendChild(img);
+      let content;
+      if (obj.secure_media) {
+        content = document.createElement("video");
+        content.src = obj.secure_media.reddit_video.fallback_url;
+        content.controls = true;
+      } else {
+        content = document.createElement("img");
+        let url = obj.preview.images[0].source.url;
+        const regExpUrl = /amp;/g;
+        url = url.replaceAll(regExpUrl, "");
+        content.src = url;
+      }
+      if (obj.over_18) {
+        content.className = "blur";
+      }
+      mainContentContainer.appendChild(content);
     } else {
       const content = document.createElement("p");
       content.textContent = obj.selftext;
@@ -97,12 +150,14 @@ async function getData(url) {
   let data = await fetch(url);
   data = await data.json();
   console.log(data.data.children);
-  data.data.children.map((obj) => {
+  document.querySelector("#feed-card-container").innerHTML = "";
+  data.data.children.forEach((obj) => {
     createCard(obj.data);
   });
 }
 
 {
+  //search url
   // fetch("https://www.reddit.com/search/.json?q=javascript")
   //   .then((r) => r.json())
   //   .then((r) => {
@@ -111,14 +166,11 @@ async function getData(url) {
 }
 
 document.querySelector("#feed-selection").addEventListener("click", (e) => {
-  console.log(e.target);
   if (e.target.className.includes("btn-filter")) {
-    document.querySelector("#feed-card-container").innerHTML = "";
-
     if (e.target.id.includes("top")) {
-      document.querySelector("#top-time-frame").style.display = "inline-block";
+      document.querySelector("#top-time-frame").className = "btn-filter top-display";
     } else {
-      document.querySelector("#top-time-frame").style.display = "none";
+      document.querySelector("#top-time-frame").className = "top-display-hidden";
     }
 
     function toggle() {
@@ -129,7 +181,8 @@ document.querySelector("#feed-selection").addEventListener("click", (e) => {
     }
 
     switch (e.target.value) {
-      case "hot" || "global":
+      case "hot":
+      case "global":
         getData("https://www.reddit.com/hot/.json");
         break;
       // case "US":
