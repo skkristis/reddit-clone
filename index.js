@@ -149,6 +149,7 @@ import createCard from "./components/CreateCard.js";
 import popUp from "./components/PopUp.js";
 
 let lastLoadedId = undefined;
+let canLoad = false;
 
 async function getData(url, scroll = false) {
   let data = await fetch(url);
@@ -164,6 +165,8 @@ async function getData(url, scroll = false) {
 
   lastLoadedId = `t3_${data.data.children[data.data.children.length - 1].data.id}`;
   console.log(lastLoadedId);
+
+  canLoad = true;
 }
 
 {
@@ -249,7 +252,9 @@ document.querySelector("#feed-card-container").addEventListener("click", (e) => 
 document.addEventListener("scroll", () => {
   // only designing HOT section, would require switch for others, not doing right now
 
-  if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight) {
+  if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight - 100 && canLoad) {
+    console.log("Bootom");
+    canLoad = false;
     getData(`https://www.reddit.com/hot/.json?limit=5&after=${lastLoadedId}`, true);
   }
 });
