@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Reddit Clone</title>
-    <script src="./index.js" defer></script>
+    <script type="module" src="./index.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -14,7 +14,7 @@
   </head>
   <body>
     <header>
-      <div id="icon-header" class="icon">
+      <a href="#" id="icon-header" class="icon">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="reddit-icon">
           <g>
             <circle fill="#FF4500" cx="10" cy="10" r="10"></circle>
@@ -32,7 +32,7 @@
             <path d="M7.68,6.53a1.19,1.19,0,0,0-1-1.18A4.56,4.56,0,0,0,2.39,6.91V6.75A1.2,1.2,0,0,0,0,6.75v9.77a1.23,1.23,0,0,0,1.12,1.24,1.19,1.19,0,0,0,1.26-1.1.66.66,0,0,0,0-.14v-5A3.62,3.62,0,0,1,5.81,7.7a4.87,4.87,0,0,1,.54,0h.24A1.18,1.18,0,0,0,7.68,6.53Z"></path>
           </g>
         </svg>
-      </div>
+      </a>
       <form id="form-search">
         <label for="search">
           <i class="fa-solid fa-magnifying-glass"></i>
@@ -49,7 +49,8 @@
       </div>
     </header>
     <main>
-      <section class="trending-container">
+      <!-- Couldn't find the right API url, so skipping for now -->
+      <!-- <section class="trending-container">
         <h3 class="defining-content">Trending today</h3>
         <div id="trending-today-container">
           <div class="trending-card">
@@ -73,7 +74,8 @@
             <div class="trending-subreddits">img for subreddit r/trending and more</div>
           </div>
         </div>
-      </section>
+      </section> -->
+
       <div id="main-sub-container">
         <div id="feed">
           <h3 class="defining-content">Popular posts</h3>
@@ -101,6 +103,10 @@
         </div>
         <div id="extra-content-on-the-side"></div>
       </div>
+      <div id="main-second-sub-container"></div>
     </main>
+    <nav>
+      <button id="back-to-top">Back to Top</button>
+    </nav>
   </body>
 </html>

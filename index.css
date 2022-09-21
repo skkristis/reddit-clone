@@ -4,9 +4,11 @@
   outline: none;
   border: none;
   font-family: "IBM Plex Sans", sans-serif;
+  scroll-behavior: smooth;
 }
 body {
   background: #dae0e6;
+  padding-top: 50px;
 }
 header {
   display: flex;
@@ -15,6 +17,11 @@ header {
   background: #ffffff;
   padding: 0 20px;
   height: 50px;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 5;
 }
 .icon {
   display: flex;
@@ -136,6 +143,7 @@ main {
   background: #ffffff;
   border-radius: 3px;
   padding: 10px;
+  width: 100%;
 }
 .feed-card-main > img,
 .feed-card-main > video {
@@ -155,11 +163,24 @@ main {
   flex-direction: column;
   align-items: center;
 }
+.score-container-popup {
+  display: flex;
+  align-items: center;
+  border: 1px solid lightgray;
+  border-top: none;
+  border-bottom: none;
+  padding-inline: 10px;
+  gap: 5px;
+}
 .card {
   margin-block: 10px;
-
+  border-radius: 3px;
   display: flex;
   background: #f8f9fa;
+}
+.card:hover {
+  border: 1px solid black;
+  cursor: pointer;
 }
 .sub-auth {
   display: flex;
@@ -185,4 +206,77 @@ main {
 }
 .top-display {
   display: inline-block;
+}
+nav {
+  position: fixed;
+  bottom: 10px;
+  right: 3vw;
+}
+#back-to-top {
+  background: #0079d3;
+  padding: 5px 15px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  border-radius: 50px;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.footer-icons:hover {
+  background: #e7e7e7;
+  padding: 5px;
+}
+
+.darken:before {
+  background: black;
+  content: "";
+  opacity: 0.7;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: -200vw;
+  z-index: 2;
+}
+.clicked-container {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  z-index: 3;
+  top: 50px;
+  left: 0;
+  right: 0;
+}
+.clicked {
+  width: 70vh;
+  cursor: default;
+}
+.pop-up-header {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  background: black;
+  color: #dae0e6;
+  padding: 15px 50px;
+}
+.pop-up-header > * {
+  color: #dae0e6;
+}
+.pop-up-card-container {
+  background: #eeeeee;
+  padding: 50px;
+}
+.pop-close {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+@media (max-width: 960px) {
+  #back-to-top {
+    display: none;
+  }
 }
