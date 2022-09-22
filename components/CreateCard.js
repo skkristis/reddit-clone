@@ -1,20 +1,19 @@
-import msToTime from "../components/MsToTime.js";
+import msToTime from "../functions/MsToTime.js";
+import elementFactory from "../functions/elementFactory.js";
+import formatter from "../functions/formatter.js";
 
 export default function createCard(obj, outputPath) {
   const output = document.querySelector(outputPath);
-  const cardContainer = document.createElement("div");
-  cardContainer.className = "card";
+  const cardContainer = elementFactory("div", "card");
   cardContainer.id = obj.id;
+
   const score = (() => {
-    const formatter = Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 });
-    const scoreContainer = document.createElement("div");
-    const score = document.createElement("p");
-    const scoreValue = formatter.format(obj.score);
-    const arrUp = document.createElement("i");
-    const arrDown = document.createElement("i");
-    scoreContainer.className = "score-container";
-    arrUp.className = "fa-solid fa-arrow-up";
-    arrDown.className = "fa-solid fa-arrow-down";
+    const scoreContainer = elementFactory("div", "score-container");
+    const score = elementFactory("p");
+    const scoreValue = formatter(obj.score);
+    const arrUp = elementFactory("i", "fa-solid fa-arrow-up");
+    const arrDown = elementFactory("i", "fa-solid fa-arrow-down");
+
     score.textContent = scoreValue;
 
     scoreContainer.appendChild(arrUp);
@@ -25,18 +24,17 @@ export default function createCard(obj, outputPath) {
   })();
 
   const mainContent = (() => {
-    const mainContentContainer = document.createElement("div");
+    const mainContentContainer = elementFactory("div", "feed-card-main");
     const infoHeader = (async () => {
-      const author = document.createElement("a");
-      const subreddit = document.createElement("a");
-      const posted = document.createElement("p");
-      const time = document.createElement("p");
-      const infoHeaderContainer = document.createElement("div");
-      const awardsCountContainer = document.createElement("a");
+      const author = elementFactory("a");
+      const subreddit = elementFactory("a");
+      const posted = elementFactory("p");
+      const time = elementFactory("p");
+      const infoHeaderContainer = elementFactory("div", "sub-auth");
+      const awardsCountContainer = elementFactory("a");
       let awardsCount = 0;
       let timePosted = msToTime(new Date() - new Date(obj.created * 1000));
 
-      infoHeaderContainer.className = "sub-auth";
       posted.innerText = "• Posted by ";
       author.textContent = `u/${obj.author}`;
       author.id = `user/${obj.author}`;
@@ -54,12 +52,11 @@ export default function createCard(obj, outputPath) {
         if (i > 3) {
           awardsCount += award.count;
         } else {
-          const icon = document.createElement("img");
-          const count = document.createElement("p");
+          const icon = elementFactory("img", "awards-icon");
+          const count = elementFactory("p");
           const iconUrl = award.icon_url;
 
           icon.src = iconUrl;
-          icon.className = "awards-icon";
 
           count.innerText = award.count;
           infoHeaderContainer.appendChild(icon);
@@ -75,8 +72,7 @@ export default function createCard(obj, outputPath) {
     })();
 
     const footerExtras = (() => {
-      const footerContainer = document.createElement("div");
-      const formatter = Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 });
+      const footerContainer = elementFactory("div", "card-footer");
 
       const content = [
         { type: "comments", icon: "fa-regular fa-message" },
@@ -87,16 +83,12 @@ export default function createCard(obj, outputPath) {
         { type: " report", icon: "fa-regular fa-flag" },
       ];
 
-      footerContainer.className = "card-footer";
-
       content.forEach((el) => {
-        const containerIcons = document.createElement("div");
-        const button = document.createElement("button");
-        const icon = document.createElement("i");
+        const containerIcons = elementFactory("div", "footer-icons");
+        const button = elementFactory("button");
+        const icon = elementFactory("i", el.icon);
 
-        containerIcons.className = "footer-icons";
-        icon.className = el.icon;
-        button.innerText = el.type !== "comments" ? el.type : `${formatter.format(obj.num_comments)} ${el.type}`;
+        button.innerText = el.type !== "comments" ? el.type : `${formatter(obj.num_comments)} ${el.type}`;
 
         containerIcons.appendChild(icon);
         containerIcons.appendChild(button);
@@ -107,8 +99,7 @@ export default function createCard(obj, outputPath) {
     })();
     // mainContentContainer.appendChild(infoHeader);
 
-    const title = document.createElement("h3");
-    mainContentContainer.className = "feed-card-main";
+    const title = elementFactory("h3");
 
     title.textContent = obj.title;
     title.style.marginBottom = "10px";
@@ -117,11 +108,11 @@ export default function createCard(obj, outputPath) {
     if (obj.preview) {
       let content;
       if ((obj.secure_media && obj.secure_media.reddit_video) || obj.preview.reddit_video_preview) {
-        content = document.createElement("video");
+        content = elementFactory("video");
         content.src = obj.secure_media.reddit_video.fallback_url || obj.preview.reddit_video_preview.fallback_url;
         content.controls = true;
       } else {
-        content = document.createElement("img");
+        content = elementFactory("img");
         let url = obj.preview.images[0].source.url;
         const regExpUrl = /amp;/g;
         url = url.replaceAll(regExpUrl, "");
@@ -132,7 +123,7 @@ export default function createCard(obj, outputPath) {
       }
       mainContentContainer.appendChild(content);
     } else {
-      const content = document.createElement("p");
+      const content = elementFactory("p");
       content.textContent = obj.selftext;
       mainContentContainer.appendChild(content);
     }

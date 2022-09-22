@@ -1,25 +1,7 @@
-import createCard from "./components/CreateCard.js";
-import popUp from "./components/PopUp.js";
-import msToTime from "./components/MsToTime.js";
-
-let lastLoadedId = undefined;
-let canLoad = false;
-
-async function getData(url, scroll = false) {
-  let data = await fetch(url);
-  data = await data.json();
-
-  console.log(data);
-  if (!scroll) {
-    document.querySelector("#feed-card-container").innerHTML = "";
-  }
-  data.data.children.forEach((obj) => {
-    createCard(obj.data, "#feed-card-container");
-  });
-
-  lastLoadedId = `t3_${data.data.children[data.data.children.length - 1].data.id}`;
-  canLoad = true;
-}
+import getData from "../functions/getData.js";
+import popUp from "../components/PopUp.js";
+import msToTime from "../components/MsToTime.js";
+import elementFactory from "../functions/elementFactory.js";
 
 {
   //search url
@@ -85,54 +67,47 @@ document.querySelector("#feed-selection").addEventListener("click", (e) => {
   }
 });
 
-document.querySelector("#back-to-top").addEventListener("click", () => {
-  document.documentElement.scrollTop = 0;
-});
-
 document.querySelector("#feed-card-container").addEventListener("click", (e) => {
-  console.log(e.target);
   let targetContainer = e.target;
   let mainContainerId = null;
-
-  while (targetContainer.className !== "card") {
-    targetContainer = targetContainer.parentNode;
-  }
-
-  mainContainerId = targetContainer.id;
-
   if (e.target.id !== "feed-card-container") {
+    while (targetContainer.className !== "card") {
+      targetContainer = targetContainer.parentNode;
+    }
+
+    mainContainerId = targetContainer.id;
+
     if (e.target.id.match("user/")) {
-      // console.log("user");
       // fetches only comments by user, not gonna implement atm
     } else if (e.target.id.match("r/")) {
       (async () => {
         const subreddit = document.createElement("h1");
         let obj = await fetch(`https://www.reddit.com/${e.target.id}/.json?limit=25`);
         obj = await obj.json();
+
         subreddit.innerText = `Welcome to ${e.target.id}!`;
-        console.log(obj);
+
         document.querySelector("#feed-card-container").innerHTML = "";
+
         document.querySelector("#feed-card-container").appendChild(subreddit);
 
         obj.data.children.forEach((obj) => {
           createCard(obj.data, "#feed-card-container");
         });
       })();
-      console.log("sub");
     } else if (e.target.id.match("more!")) {
       (async () => {
         let obj = await fetch(`https://www.reddit.com/${mainContainerId}/.json`);
         obj = await obj.json();
 
         obj = obj[0].data.children[0].data;
-        const author = document.createElement("a");
-        const subreddit = document.createElement("a");
-        const posted = document.createElement("p");
-        const time = document.createElement("p");
-        const infoHeaderContainer = document.createElement("div");
+        const author = elementFactory("a");
+        const subreddit = elementFactory("a");
+        const posted = elementFactory("p");
+        const time = elementFactory("p");
+        const infoHeaderContainer = elementFactory("div", "sub-auth");
         let timePosted = msToTime(new Date() - new Date(obj.created * 1000));
 
-        infoHeaderContainer.className = "sub-auth";
         posted.innerText = "• Posted by ";
         author.textContent = `u/${obj.author}`;
         author.id = `user/${obj.author}`;
@@ -146,12 +121,11 @@ document.querySelector("#feed-card-container").addEventListener("click", (e) => 
         infoHeaderContainer.appendChild(time);
 
         obj.all_awardings.forEach((award) => {
-          const icon = document.createElement("img");
-          const count = document.createElement("p");
+          const icon = elementFactory("img", "awards-icon");
+          const count = elementFactory("p");
           const iconUrl = award.icon_url;
 
           icon.src = iconUrl;
-          icon.className = "awards-icon";
 
           count.innerText = award.count;
           infoHeaderContainer.appendChild(icon);
@@ -171,17 +145,16 @@ document.querySelector("#feed-card-container").addEventListener("click", (e) => 
   }
 });
 
-document.addEventListener("scroll", () => {
-  // only designing HOT section, would require switch for others, not doing right now
-
-  if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight - 100 && canLoad) {
-    canLoad = false;
-    getData(`https://www.reddit.com/hot/.json?limit=5&after=${lastLoadedId}`, true);
+document.querySelector("#icon-header").addEventListener("click", () => {
+  if (document.querySelector("#feed-card-container").className.match("display-none")) {
+    document.querySelector(".clicked-container").remove();
+    document.querySelector("#feed-card-container").classList.toggle("display-none");
   }
+  getData("https://www.reddit.com/hot/.json?limit=5");
 });
 
-document.querySelector("#icon-header").addEventListener("click", () => {
-  getData("https://www.reddit.com/hot/.json?limit=5");
+document.querySelector("#back-to-top").addEventListener("click", () => {
+  document.documentElement.scrollTop = 0;
 });
 
 getData("https://www.reddit.com/hot/.json?limit=5");
