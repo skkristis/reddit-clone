@@ -3,16 +3,6 @@ import popUp from "../components/PopUp.js";
 import msToTime from "../functions/MsToTime.js";
 import elementFactory from "../functions/elementFactory.js";
 import search from "../functions/search.js";
-import createCard from "../components/CreateCard.js";
-
-{
-  //search url
-  // fetch("https://www.reddit.com/search/.json?q=javascript")
-  //   .then((r) => r.json())
-  //   .then((r) => {
-  //     console.log(r);
-  //   });
-}
 
 document.querySelector("#feed-selection").addEventListener("click", (e) => {
   if (e.target.className.includes("btn-filter")) {
