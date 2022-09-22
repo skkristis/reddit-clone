@@ -1,6 +1,6 @@
 import getData from "../functions/getData.js";
 import popUp from "../components/PopUp.js";
-import msToTime from "../components/MsToTime.js";
+import msToTime from "../functions/MsToTime.js";
 import elementFactory from "../functions/elementFactory.js";
 
 {
