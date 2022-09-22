@@ -2,6 +2,8 @@ import getData from "../functions/getData.js";
 import popUp from "../components/PopUp.js";
 import msToTime from "../functions/MsToTime.js";
 import elementFactory from "../functions/elementFactory.js";
+import search from "../functions/search.js";
+import createCard from "../components/CreateCard.js";
 
 {
   //search url
@@ -30,37 +32,37 @@ document.querySelector("#feed-selection").addEventListener("click", (e) => {
     switch (e.target.value) {
       case "hot":
       case "global":
-        getData("https://www.reddit.com/hot/.json");
+        getData("https://www.reddit.com/hot/.json?limit=5");
         break;
       // case "US":
       //   getData("https://www.reddit.com/r/popular/.json?geo_filter=US");
       //   break;
       case "new":
-        getData("https://www.reddit.com/new/.json");
+        getData("https://www.reddit.com/new/.json?limit=5");
         break;
       case "top":
-        getData("https://www.reddit.com/top/.json");
+        getData("https://www.reddit.com/top/.json?limit=5");
         break;
       case "now":
-        getData("https://www.reddit.com/top/.json?t=hour");
+        getData("https://www.reddit.com/top/.json?limit=5&t=hour");
         break;
       case "today":
-        getData("https://www.reddit.com/top/.json?t=day");
+        getData("https://www.reddit.com/top/.json?limit=5&t=day");
         break;
       case "thisWeek":
-        getData("https://www.reddit.com/top/.json?t=week");
+        getData("https://www.reddit.com/top/.jsonlimit=5&?t=week");
         break;
       case "thisMonth":
-        getData("https://www.reddit.com/top/.json?t=month");
+        getData("https://www.reddit.com/top/.json?limit=5&t=month");
         break;
       case "thisYear":
-        getData("https://www.reddit.com/top/.json?t=year");
+        getData("https://www.reddit.com/top/.json?limit=5&t=year");
         break;
       case "allTime":
-        getData("https://www.reddit.com/top/.json?t=all");
+        getData("https://www.reddit.com/top/.json?limit=5&t=all");
         break;
       case "rising":
-        getData("https://www.reddit.com/rising/.json");
+        getData("https://www.reddit.com/rising/.json?limit=5");
         break;
     }
     toggle();
@@ -80,21 +82,7 @@ document.querySelector("#feed-card-container").addEventListener("click", (e) => 
     if (e.target.id.match("user/")) {
       // fetches only comments by user, not gonna implement atm
     } else if (e.target.id.match("r/")) {
-      (async () => {
-        const subreddit = document.createElement("h1");
-        let obj = await fetch(`https://www.reddit.com/${e.target.id}/.json?limit=25`);
-        obj = await obj.json();
-
-        subreddit.innerText = `Welcome to ${e.target.id}!`;
-
-        document.querySelector("#feed-card-container").innerHTML = "";
-
-        document.querySelector("#feed-card-container").appendChild(subreddit);
-
-        obj.data.children.forEach((obj) => {
-          createCard(obj.data, "#feed-card-container");
-        });
-      })();
+      getData(`https://www.reddit.com/${e.target.id}/.json?limit=25`, true, true, e.target.id);
     } else if (e.target.id.match("more!")) {
       (async () => {
         let obj = await fetch(`https://www.reddit.com/${mainContainerId}/.json`);
@@ -150,7 +138,15 @@ document.querySelector("#icon-header").addEventListener("click", () => {
     document.querySelector(".clicked-container").remove();
     document.querySelector("#feed-card-container").classList.toggle("display-none");
   }
+  document.querySelector("#form-search").reset();
+
   getData("https://www.reddit.com/hot/.json?limit=5");
+});
+
+document.querySelector("#form-search").addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  search();
 });
 
 document.querySelector("#back-to-top").addEventListener("click", () => {

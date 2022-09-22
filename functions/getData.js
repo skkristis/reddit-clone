@@ -1,13 +1,20 @@
 import createCard from "../components/CreateCard.js";
 
 let lastLoadedId = undefined;
-let canLoad = false;
 
-export default async function getData(url, scroll = false) {
+export default async function getData(url, scroll = false, sub = false, subName) {
+  if (sub) {
+    document.querySelector("#feed-card-container").innerHTML = "";
+
+    const subreddit = document.createElement("h1");
+    subreddit.innerText = `Welcome to ${subName}!`;
+    document.querySelector("#feed-card-container").appendChild(subreddit);
+  }
+
   let data = await fetch(url);
   data = await data.json();
-
   console.log(data);
+
   if (!scroll) {
     document.querySelector("#feed-card-container").innerHTML = "";
   }
@@ -16,14 +23,15 @@ export default async function getData(url, scroll = false) {
   });
 
   lastLoadedId = `t3_${data.data.children[data.data.children.length - 1].data.id}`;
-  canLoad = true;
 
-  document.addEventListener("scroll", () => {
-    // only designing HOT section, would require switch for others, not doing right now
+  const loadMore = document.createElement("button");
+  loadMore.className = "load-more-btn";
+  loadMore.innerText = "Load more?";
 
-    if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight - 100 && canLoad) {
-      canLoad = false;
-      getData(`https://www.reddit.com/hot/.json?limit=5&after=${lastLoadedId}`, true);
-    }
+  document.querySelector("#feed-card-container").appendChild(loadMore);
+
+  document.querySelector(".load-more-btn").addEventListener("click", (e) => {
+    e.target.remove();
+    getData(`${url}&after=${lastLoadedId}`, true);
   });
 }

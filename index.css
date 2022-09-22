@@ -300,6 +300,15 @@ i:hover {
   transform: scale(1.2);
   transition: 0.3s;
 }
+.load-more-btn {
+  width: 100%;
+  background: #0079d3;
+  padding: 5px 15px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  border-radius: 50px;
+}
 @media (max-width: 960px) {
   #back-to-top {
     display: none;
