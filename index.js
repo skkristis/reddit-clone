@@ -62,6 +62,8 @@ document.querySelector("#feed-selection").addEventListener("click", (e) => {
 document.querySelector("#feed-card-container").addEventListener("click", (e) => {
   let targetContainer = e.target;
   let mainContainerId = null;
+  
+  if (e.target.className !== "load-more-btn") {
   if (e.target.id !== "feed-card-container") {
     while (targetContainer.className !== "card") {
       targetContainer = targetContainer.parentNode;
@@ -120,6 +122,7 @@ document.querySelector("#feed-card-container").addEventListener("click", (e) => 
     } else {
       popUp(mainContainerId);
     }
+  }
   }
 });
 
