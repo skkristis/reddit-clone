@@ -1,3 +1,5 @@
+import msToTime from "../components/MsToTime.js";
+
 export default function createCard(obj, outputPath) {
   const output = document.querySelector(outputPath);
   const cardContainer = document.createElement("div");
@@ -23,43 +25,30 @@ export default function createCard(obj, outputPath) {
   })();
 
   const mainContent = (() => {
-    function msToTime(ms) {
-      let seconds = (ms / 1000).toFixed(0);
-      let minutes = (ms / (1000 * 60)).toFixed(0);
-      let hours = (ms / (1000 * 60 * 60)).toFixed(0);
-      let days = (ms / (1000 * 60 * 60 * 24)).toFixed(0);
-      let months = (ms / (1000 * 60 * 60 * 24 * 30)).toFixed(0);
-      let years = (ms / (1000 * 60 * 60 * 24 * 30 * 12)).toFixed(0);
-
-      if (seconds < 60) {
-        return "just now";
-      } else if (minutes < 60) {
-        return minutes + " minutes ago";
-      } else if (hours < 24) {
-        return hours + " hours ago";
-      } else if (days < 30) {
-        return days + " days ago";
-      } else if (months < 12) {
-        return months + " months ago";
-      } else {
-        return years + " years ago";
-      }
-    }
     const mainContentContainer = document.createElement("div");
     const infoHeader = (async () => {
       const author = document.createElement("a");
       const subreddit = document.createElement("a");
+      const posted = document.createElement("p");
+      const time = document.createElement("p");
       const infoHeaderContainer = document.createElement("div");
       const awardsCountContainer = document.createElement("a");
       let awardsCount = 0;
       let timePosted = msToTime(new Date() - new Date(obj.created * 1000));
 
       infoHeaderContainer.className = "sub-auth";
-      author.textContent = `• Posted by u/${obj.author} ${timePosted}`;
+      posted.innerText = "• Posted by ";
+      author.textContent = `u/${obj.author}`;
+      author.id = `user/${obj.author}`;
       subreddit.textContent = obj.subreddit_name_prefixed;
+      subreddit.id = obj.subreddit_name_prefixed;
+      time.innerText = timePosted;
+      awardsCountContainer.id = "more!";
 
       infoHeaderContainer.appendChild(subreddit);
+      infoHeaderContainer.appendChild(posted);
       infoHeaderContainer.appendChild(author);
+      infoHeaderContainer.appendChild(time);
 
       obj.all_awardings.forEach((award, i) => {
         if (i > 3) {

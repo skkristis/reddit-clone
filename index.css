@@ -296,6 +296,10 @@ a:hover {
 .display-none {
   display: none;
 }
+i:hover {
+  transform: scale(1.2);
+  transition: 0.3s;
+}
 @media (max-width: 960px) {
   #back-to-top {
     display: none;

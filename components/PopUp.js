@@ -1,3 +1,5 @@
+import msToTime from "../components/MsToTime.js";
+
 export default async function popUp(id) {
   function createCard(obj, outputPath) {
     const output = document.querySelector(outputPath);
@@ -24,28 +26,6 @@ export default async function popUp(id) {
     })();
 
     const mainContent = (() => {
-      function msToTime(ms) {
-        let seconds = (ms / 1000).toFixed(0);
-        let minutes = (ms / (1000 * 60)).toFixed(0);
-        let hours = (ms / (1000 * 60 * 60)).toFixed(0);
-        let days = (ms / (1000 * 60 * 60 * 24)).toFixed(0);
-        let months = (ms / (1000 * 60 * 60 * 24 * 30)).toFixed(0);
-        let years = (ms / (1000 * 60 * 60 * 24 * 30 * 12)).toFixed(0);
-
-        if (seconds < 60) {
-          return "just now";
-        } else if (minutes < 60) {
-          return minutes + " minutes ago";
-        } else if (hours < 24) {
-          return hours + " hours ago";
-        } else if (days < 30) {
-          return days + " days ago";
-        } else if (months < 12) {
-          return months + " months ago";
-        } else {
-          return years + " years ago";
-        }
-      }
       const mainContentContainer = document.createElement("div");
       const infoHeader = (async () => {
         const author = document.createElement("a");
@@ -163,28 +143,6 @@ export default async function popUp(id) {
     const output = document.querySelector(outputPath);
     const container = document.createElement("div");
     const header = (() => {
-      function msToTime(ms) {
-        let seconds = (ms / 1000).toFixed(0);
-        let minutes = (ms / (1000 * 60)).toFixed(0);
-        let hours = (ms / (1000 * 60 * 60)).toFixed(0);
-        let days = (ms / (1000 * 60 * 60 * 24)).toFixed(0);
-        let months = (ms / (1000 * 60 * 60 * 24 * 30)).toFixed(0);
-        let years = (ms / (1000 * 60 * 60 * 24 * 30 * 12)).toFixed(0);
-
-        if (seconds < 60) {
-          return "just now";
-        } else if (minutes < 60) {
-          return minutes + " minutes ago";
-        } else if (hours < 24) {
-          return hours + " hours ago";
-        } else if (days < 30) {
-          return days + " days ago";
-        } else if (months < 12) {
-          return months + " months ago";
-        } else {
-          return years + " years ago";
-        }
-      }
       const awardsCountContainer = document.createElement("a");
       const commentsHeader = document.createElement("div");
       const author = document.createElement("a");
@@ -294,14 +252,12 @@ export default async function popUp(id) {
   popUpContainer.appendChild(popUpContentContainer);
   document.querySelector("#feed").appendChild(popUpContainer);
 
-  const postData = await fetch(`https://www.reddit.com/${id}/.json`)
-    .then((resp) => resp.json())
-    .then((r) => {
-      return {
-        post: r[0].data.children[0].data,
-        comments: r[1].data.children,
-      };
-    });
+  let postData = await fetch(`https://www.reddit.com/${id}/.json`);
+  postData = await postData.json();
+  postData = {
+    post: postData[0].data.children[0].data,
+    comments: postData[1].data.children,
+  };
 
   const score = (() => {
     const formatter = Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 });
