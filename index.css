@@ -224,35 +224,33 @@ nav {
 a:hover {
   text-decoration: underline;
 }
-
-.footer-icons:hover {
-  background: #e7e7e7;
+.footer-icons {
   padding: 5px;
 }
-
-.darken:before {
-  background: black;
-  content: "";
-  opacity: 0.7;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: -200vw;
-  z-index: 2;
+.footer-icons:hover {
+  background: #e7e7e7;
+}
+.comment-container {
+  background: #ffffff;
+  border: 1px solid gray;
+  border-right: none;
+  border-left: none;
+  padding-block: 5px;
 }
 .clicked-container {
   display: flex;
   justify-content: center;
   position: absolute;
-  z-index: 3;
   top: 50px;
   left: 0;
   right: 0;
+  min-height: 100vh;
+  background: rgba(0, 0, 0, 0.678);
 }
 .clicked {
   width: 70vh;
   cursor: default;
+  min-height: 50vh;
 }
 .pop-up-header {
   display: flex;
@@ -275,6 +273,29 @@ a:hover {
   gap: 5px;
 }
 
+.card-popped {
+  margin-block: 10px;
+  border-radius: 3px;
+  display: flex;
+  background: #f8f9fa;
+}
+.score-container-popped {
+  padding: 5px;
+  font-weight: 600;
+  background: #ffffff;
+}
+.score-container-popped > * {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.comments {
+  border: none;
+  font-size: 14px;
+}
+.display-none {
+  display: none;
+}
 @media (max-width: 960px) {
   #back-to-top {
     display: none;
